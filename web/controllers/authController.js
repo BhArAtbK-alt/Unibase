@@ -1,4 +1,4 @@
-import pool from "../../Backend/config/pg.js";
+import pool from "../config/pg.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
