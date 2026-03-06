@@ -8,6 +8,7 @@ export const executeSql = async (api_key, payload) => {
     try {
         const schemaId = await getSchemaId(api_key);
         schemaName = `proj_${schemaId}`;
+        
     } catch (e) {
         return { success: false, message: "Invalid API Key", userdata: null };
     }

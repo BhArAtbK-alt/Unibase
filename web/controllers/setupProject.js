@@ -29,7 +29,7 @@ export const setupProject = async (userId, projectName) => {
         await client.query(`SET search_path TO "proj_${projectId}"`);
 
         await client.query(`
-            CREATE TABLE IF NOT EXISTS _ub_auth_users (
+            CREATE TABLE IF NOT EXISTS Authentication (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),  
                 username TEXT UNIQUE,
                 phone TEXT UNIQUE,      
@@ -67,7 +67,26 @@ export const setupProject = async (userId, projectName) => {
             );
         `);
 
+        await client.query(`
+            CREATE TABLE "_ub_collection_data" (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- The "Node ID"
+                collection_id UUID REFERENCES "_ub_collections"(id) ON DELETE CASCADE,
+                data JSONB NOT NULL, -- The rich metadata/properties
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            );
+        `);
         
+        await client.query(`
+            CREATE TABLE "_ub_collection_data" (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- The "Node ID"
+                collection_id UUID REFERENCES "_ub_collections"(id) ON DELETE CASCADE,
+                data JSONB NOT NULL, -- The rich metadata/properties
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            );
+        `);
+
         await client.query(`SET search_path TO public`);
         
         await client.query('COMMIT');

@@ -11,8 +11,10 @@ export const getSchemaId = async (api_key) => {
     if (result.rows.length === 0) {
         return null; 
     }
-
+    console.log("adfs" + result.rows[0].project_id);
+    
   return result.rows[0].project_id;
 
 };
+
 

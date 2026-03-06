@@ -6,6 +6,7 @@ import sendSqlReqRoute from './Backend/sqlRoute/sendSqlReq.js';
 import sendSdkReqRoute from './Backend/sdkRoute/sendSdkReq.js';
 import queryReq from './Backend/sdkRoute/query.js';
 import authReq from './Backend/sdkRoute/auth.js';
+import collectionReq from './Backend/sdkRoute/collection.js';
 import "dotenv/config";
 
 
@@ -25,6 +26,7 @@ app.use(express.json());
 //app.use('/api', sendSqlReqRoute);
 app.use('/api', queryReq)
 app.use('/api', authReq);
+app.use('/api', collectionReq);
 
 app.get("/health", (req, res) => {
     res.status(200).json({ status: "Engine is alive", timestamp: new Date() });
