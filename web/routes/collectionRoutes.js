@@ -3,6 +3,9 @@ import { createCollection } from '../collection-controllers/createCollection.js'
 import { getCollections } from '../collection-controllers/getCollections.js';
 import { getCollectionData } from '../collection-controllers/getCollectionData.js';
 import { insertDocument } from '../collection-controllers/insertDocument.js';
+import { filterCollections } from '../collection-controllers/filterCollections.js';
+
+
 
 
 
@@ -15,5 +18,12 @@ router.get("/get-collection-names", getCollections);
 router.get("/get-collection-data", getCollectionData);
 
 router.post("/insert-into-collection", insertDocument);
+
+router.post("/filter-collection", filterCollections);
+
+
+
+
+
 
 export default router;
