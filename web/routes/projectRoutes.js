@@ -6,6 +6,7 @@ import { getProjectInfo } from "../controllers/getProjectInfo.js";
 import { getTableData } from "../controllers/getTableData.js";
 import { executeEditorSql } from "../controllers/executeEditorSql.js";
 import { getProjectConnectionDetails } from "../controllers/getProjectConnectionDetails.js";
+import { exportCsv } from "../controllers/exportCsv.js";
 
 
 
@@ -107,6 +108,7 @@ router.post("/execute-editor-sql", async (req, res) => {
     }
 });
 
+router.post("/export-csv", exportCsv);
 
 
 export default router;
