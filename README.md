@@ -16,9 +16,13 @@ Unibase/
 
 📚 Unibase DocumentationWelcome to the official documentation for Unibase, the lightweight, JavaScript-powered Backend-as-a-Service engine. This guide covers the architecture, core modules, and API references needed to extend and deploy Unibase.
 
-🏗️ 1. Architecture OverviewUnibase is divided into two primary subsystems, ensuring a clean separation between the backend engine and the management interface.The Engine (/Backend & server.js): The core Node.js application responsible for handling API requests, managing database connections, routing, and executing business logic.The Dashboard (/web): A frontend web application used by administrators to visually manage database collections, users, API keys, and server settings without writing code.
+🏗️ 1. Architecture Overview  
+Unibase is divided into two primary subsystems, ensuring a clean separation between the backend engine and the management interface.The Engine (/Backend & server.js): The core Node.js application responsible for handling API requests, managing database connections, routing, and executing business logic.The Dashboard (/web): A frontend web application used by administrators to visually manage database collections, users, API keys, and server settings without writing code.
 
-⚙️ 2. Core Modules2.1 Authentication & AuthorizationUnibase provides built-in user management.JWT-based Auth: Issues JSON Web Tokens for secure stateless API communication.Role-Based Access Control (RBAC): Define roles (e.g., admin, user, guest) and restrict access to specific collections or endpoints based on these roles.2.2 Dynamic API GenerationAs a BaaS, Unibase dynamically generates RESTful endpoints based on your data models.CRUD Operations: Automatically creates Create, Read, Update, and Delete endpoints when a new collection is defined in the dashboard.Filtering & Pagination: Built-in query parsing to handle limits, offsets, and field filtering via URL parameters.2.3 Database AbstractionUnibase sits on top of your database to manage data seamlessly.Note: Update this section based on your specific database (e.g., MongoDB/Mongoose, PostgreSQL/Prisma).Schema Management: Define and validate data structures.Relationships: Support for linking different data collections.
+⚙️ 2. Core Modules  
+2.1 Authentication & AuthorizationUnibase provides built-in user management.JWT-based Auth: Issues JSON Web Tokens for secure stateless API communication.Role-Based Access Control (RBAC): Define roles (e.g., admin, user, guest) and restrict access to specific collections or endpoints based on these roles.  
+2.2 Dynamic API GenerationAs a BaaS, Unibase dynamically generates RESTful endpoints based on your data models.CRUD Operations: Automatically creates Create, Read, Update, and Delete endpoints when a new collection is defined in the dashboard.Filtering & Pagination: Built-in query parsing to handle limits, offsets, and field filtering via URL parameters.  
+2.3 Database AbstractionUnibase sits on top of your database to manage data seamlessly.Note: Update this section based on your specific database (e.g., MongoDB/Mongoose, PostgreSQL/Prisma).Schema Management: Define and validate data structures.Relationships: Support for linking different data collections.
 
 📡 3. REST API Reference
 Base URLAll
@@ -98,6 +102,6 @@ OmkarDev28
 
 GitHub: @OmkarDev28
 ```
-**Note:** Feel free to update the `Features` and `Environment Variables` sections with the exact details of the database (e.g., MongoDB/PostgreSQL) and the frameworks (e.g., React, Express) you actually implemented in your specific `package.json`!
+NOTE: Feel free to update the `Features` and `Environment Variables` sections with the exact details of the database (e.g., MongoDB/PostgreSQL) and the frameworks (e.g., React, Express) you actually implemented in your specific `package.json`!
 ```
 
