@@ -101,7 +101,8 @@ Distributed under the MIT License. See LICENSE for more information.
 OmkarDev28
 
 GitHub: @OmkarDev28
+**Note**
 ```
-NOTE: Feel free to update the `Features` and `Environment Variables` sections with the exact details of the database (e.g., MongoDB/PostgreSQL) and the frameworks (e.g., React, Express) you actually implemented in your specific `package.json`!
+Feel free to update the `Features` and `Environment Variables` sections with the exact details of the database (e.g., MongoDB/PostgreSQL) and the frameworks (e.g., React, Express) you actually implemented in your specific `package.json`!
 ```
 
