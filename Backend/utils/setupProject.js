@@ -67,6 +67,18 @@ export const setupProject = async (userId, projectName) => {
             );
         `);
 
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS _ub_storage (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                file_name TEXT NOT NULL,
+                file_type TEXT,
+                size BIGINT,
+                url TEXT NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+
+
         
         await client.query(`SET search_path TO public`);
         
