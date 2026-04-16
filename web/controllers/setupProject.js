@@ -44,7 +44,7 @@ export const setupProject = async (userId, projectName) => {
         await client.query(`
             CREATE TABLE IF NOT EXISTS _ub_graph_nodes (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                type TEXT NOT NULL,            
+                type TEXT NOT NULL UNIQUE,            
                 properties JSONB DEFAULT '{}', 
                 created_at TIMESTAMP DEFAULT NOW()
             );
@@ -82,6 +82,17 @@ export const setupProject = async (userId, projectName) => {
                 data JSONB NOT NULL, -- The rich metadata/properties
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW()
+            );
+        `);
+
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS _ub_storage (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                file_name TEXT NOT NULL,
+                file_type TEXT,
+                size BIGINT,
+                url TEXT NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
         `);
 
