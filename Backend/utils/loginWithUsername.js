@@ -26,7 +26,7 @@ export const loginWithUsername = async (api_key, payload) => {
 
         const query = `
             SELECT id, username, phone, email, is_active, role, created_at 
-            FROM "${schemaName}"._ub_auth_users
+            FROM "${schemaName}".authentication
             WHERE username = $1 AND password = $2;
         `;
 

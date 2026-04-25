@@ -2,6 +2,8 @@ import express from "express";
 import {createNode} from '../utils-graph/createNode.js';
 import { createRelationship } from "../utils-graph/createRelationship.js";
 import { deleteRelationship } from "../utils-graph/deleteRelationship.js";
+import { getNeighbors } from "../utils-graph/getNeighbors.js";
+
 
 
 
@@ -38,6 +40,11 @@ router.post("/graph", async (req, res) => {
                     to_node: req.body.to_node,
                     relationship: req.body.relationship
                 });
+                break;
+
+
+            case "GET_NEIGHBORS":
+                result = await getNeighbors(api_key, req.body);
                 break;
 
             default:
