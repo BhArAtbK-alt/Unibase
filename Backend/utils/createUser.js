@@ -33,7 +33,7 @@ export const createUser = async (api_key, payload) => {
     }
 
     const query = `
-        INSERT INTO "${schemaName}"._ub_auth_users (${cols.join(", ")})
+        INSERT INTO "${schemaName}".authentication (${cols.join(", ")})
         VALUES (${placeholders.join(", ")})
         RETURNING id, username, email, role, phone;
     `;

@@ -1,73 +1,68 @@
 import pool from "../config/pg.js";
 import { getSchemaId } from "../utils/getSchemaId.js";
-
+import { logSystemAction } from "../utils/logger.js";
 
 export const updateDoc = async (api_key, payload) => {
-    let schemaName;
-    try {
-        const schemaId = await getSchemaId(api_key);
-        if (!schemaId) return { success: false, message: "Invalid API Key" };
-        schemaName = "proj_" + schemaId;
-    } catch (e) { return { success: false, message: "Server Error" }; }
+    const startTimer = performance.now();
+    const { filters, data, collection } = payload;
+    let schemaId, schemaName;
 
-    const { id, filters, data, collection } = payload;
+    // 1. Resolve Schema
+    try {
+        schemaId = await getSchemaId(api_key);
+        if (!schemaId) return { success: false, message: "Invalid API Key" };
+        schemaName = `proj_${schemaId}`;
+    } catch (e) {
+        return { success: false, message: "Server Error during schema resolution" };
+    }
+
     const client = await pool.connect();
 
     try {
-        if (!id && (!filters || filters.length === 0)) {
-            return { success: false, message: "Update rejected: No ID or filters provided." };
-        }
+        await client.query('BEGIN');
 
-        let queryParams = [];
+        // 2. Resolve Collection ID
+        const collRes = await client.query(`SELECT id FROM "${schemaName}"._ub_collections WHERE name = $1`, [collection]);
+        if (collRes.rowCount === 0) throw new Error("Collection not found");
+        const collectionId = collRes.rows[0].id;
+
+        // 3. Build Dynamic Query
+        let queryParams = [JSON.stringify(data), collectionId];
         let whereClauses = [];
-
-        if (id) {
-            queryParams.push(id);
-            whereClauses.push(`d.id = $${queryParams.length}`);
-        } else {
-            filters.forEach((f) => {
-                const path = `{${f.field.split('.').join(',')}}`;
-                queryParams.push(path, f.value);
-                const cast = typeof f.value === 'number' ? '::float' : '';
-                whereClauses.push(`(d.data#>>$${queryParams.length - 1})${cast} = $${queryParams.length}`);
-            });
-        }
-
-
-        let updateExpression = "d.data";
         
-        for (const [key, value] of Object.entries(data)) {
-            const path = `{${key.split('.').join(',')}}`;
-            queryParams.push(path, JSON.stringify(value));
-            updateExpression = `jsonb_set(${updateExpression}, $${queryParams.length - 1}, $${queryParams.length}, true)`;
-        }
+        filters.forEach((f) => {
+            queryParams.push(f.value);
+            // Handle nested paths (e.g., 'user.profile.name' -> 'user', 'profile', 'name')
+            const pathParts = f.field.split('.');
+            const pathSql = pathParts.map(p => `'${p}'`).join(', ');
+            
+            whereClauses.push(`jsonb_extract_path_text(d.data, ${pathSql}) = $${queryParams.length}`);
+        });
 
-        queryParams.push(collection);
-        const collectionIdx = queryParams.length;
-
-        const query = `
+        // 4. Update Query (|| merges the existing JSONB data with new data)
+        const updateQuery = `
             UPDATE "${schemaName}"._ub_collection_data d
-            SET 
-                data = ${updateExpression},
-                updated_at = NOW()
-            FROM "${schemaName}"._ub_collections c
-            WHERE d.collection_id = c.id 
-            AND c.name = $${collectionIdx}
-            AND ${whereClauses.join(' AND ')}
-            RETURNING d.id, d.data;
+            SET data = data || $1
+            WHERE d.collection_id = $2
+            AND ${whereClauses.join(' AND ')};
         `;
 
-        const result = await client.query(query, queryParams);
+        const result = await client.query(updateQuery, queryParams);
+        await client.query('COMMIT');
 
-        return {
-            success: true,
-            count: result.rowCount,
-            message: `Updated ${result.rowCount} documents.`,
-            data: result.rows
-        };
+        // 5. Log Success
+        const durationMs = (performance.now() - startTimer).toFixed(2);
+        logSystemAction(schemaId, `UPDATE_DOC: ${collection}`, 200, durationMs, null, { updatedCount: result.rowCount });
+
+        return { success: true, message: `Updated ${result.rowCount} docs.` };
 
     } catch (err) {
-        console.error("Update error:", err);
+        await client.query('ROLLBACK');
+        const durationMs = (performance.now() - startTimer).toFixed(2);
+        
+        logSystemAction(schemaId, `UPDATE_DOC: ${collection}`, 500, durationMs, err.message);
+        
+        console.error("UpdateDoc Error:", err.message);
         return { success: false, message: err.message };
     } finally {
         client.release();
