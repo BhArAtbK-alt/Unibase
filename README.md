@@ -97,9 +97,9 @@ pm2 start server.js --name "unibase-engine"
 📝 License
 Distributed under the MIT License. See LICENSE for more information.
 
-👤 Author
-OmkarDev28
-
+👥 Authors & Contributors
+* **OmkarDev28**
+* **BhArAtbK-alt** 
 GitHub: @OmkarDev28  
 **Note**
 ```
